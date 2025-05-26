@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>企业营销管理分析报告</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header .subtitle {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .report-time {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #34495e;
+            font-weight: 500;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 20px;
+        }
+
+        .kpi-item {
+            text-align: center;
+            padding: 15px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            border-left: 4px solid #3498db;
+        }
+
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .kpi-label {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .kpi-trend {
+            font-size: 0.8rem;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+        }
+
+        .trend-up {
+            color: #27ae60;
+        }
+
+        .trend-down {
+            color: #e74c3c;
+        }
+
+        .progress-container {
+            margin: 20px 0;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #34495e;
+        }
+
+        .progress-bar {
+            background: #ecf0f1;
+            border-radius: 10px;
+            height: 8px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.8s ease;
+        }
+
+        .progress-success { background: linear-gradient(90deg, #27ae60, #2ecc71); }
+        .progress-warning { background: linear-gradient(90deg, #f39c12, #e67e22); }
+        .progress-info { background: linear-gradient(90deg, #3498db, #2980b9); }
+
+        .funnel-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .funnel-stage {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            flex: 1;
+            min-width: 120px;
+            position: relative;
+        }
+
+        .funnel-stage:nth-child(2) {
+            background: linear-gradient(135deg, #e67e22, #d35400);
+        }
+
+        .funnel-stage:nth-child(3) {
+            background: linear-gradient(135deg, #27ae60, #229954);
+        }
+
+        .funnel-stage:nth-child(4) {
+            background: linear-gradient(135deg, #8e44ad, #7d3c98);
+        }
+
+        .funnel-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .funnel-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .funnel-rate {
+            font-size: 0.8rem;
+            margin-top: 5px;
+            opacity: 0.8;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .data-table th {
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .data-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .data-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .rank-badge {
+            display: inline-block;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 25px;
+            color: white;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        .rank-1 { background: #e74c3c; }
+        .rank-2 { background: #f39c12; }
+        .rank-3 { background: #27ae60; }
+        .rank-other { background: #95a5a6; }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-active { background: #d5f4e6; color: #27ae60; }
+        .status-pending { background: #fef9e7; color: #f39c12; }
+        .status-risk { background: #fadbd8; color: #e74c3c; }
+
+        .chart-container {
+            height: 300px;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .alert-section {
+            background: linear-gradient(135deg, #fff5f5, #fed7d7);
+            border-left: 4px solid #e53e3e;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .alert-title {
+            color: #c53030;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .alert-content {
+            color: #742a2a;
+            line-height: 1.6;
+        }
+
+        .insight-section {
+            background: linear-gradient(135deg, #f0fff4, #c6f6d5);
+            border-left: 4px solid #38a169;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .insight-title {
+            color: #2f855a;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .insight-content {
+            color: #276749;
+            line-height: 1.6;
+        }
+
+        .section-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .customer-level {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .level-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .level-vip { background: #e74c3c; }
+        .level-important { background: #f39c12; }
+        .level-normal { background: #3498db; }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .summary-header h2 {
+                font-size: 1.6rem;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-card {
+                padding: 20px;
+            }
+
+            .summary-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+
+            .summary-card-header h3 {
+                font-size: 1.2rem;
+            }
+
+            .kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .funnel-container {
+                flex-direction: column;
+            }
+
+            .section-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .section-divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #bdc3c7, transparent);
+            margin: 40px 0;
+        }
+
+        /* 执行摘要样式 */
+        .executive-summary {
+            margin-bottom: 40px;
+        }
+
+        .summary-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .summary-header h2 {
+            font-size: 2rem;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .summary-header p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .summary-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .summary-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .summary-card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+
+        .summary-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .summary-card-header h3 {
+            font-size: 1.4rem;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .summary-content {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* 核心发现样式 */
+        .finding-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+        }
+
+        .finding-item.positive {
+            background: linear-gradient(135deg, #d5f4e6, #c6f6d5);
+            color: #2f855a;
+        }
+
+        .finding-item.positive i {
+            color: #38a169;
+        }
+
+        .finding-item.warning {
+            background: linear-gradient(135deg, #fef9e7, #fbd38d);
+            color: #d69e2e;
+        }
+
+        .finding-item.warning i {
+            color: #ed8936;
+        }
+
+        .finding-item.critical {
+            background: linear-gradient(135deg, #fed7d7, #feb2b2);
+            color: #c53030;
+        }
+
+        .finding-item.critical i {
+            color: #e53e3e;
+        }
+
+        /* 紧急行动项样式 */
+        .action-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 15px;
+            background: linear-gradient(135deg, #f7fafc, #edf2f7);
+            border-radius: 12px;
+            border-left: 4px solid #e2e8f0;
+        }
+
+        .priority-badge {
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-align: center;
+            min-width: 30px;
+        }
+
+        .priority-badge.high {
+            background: #e53e3e;
+            color: white;
+        }
+
+        .priority-badge.medium {
+            background: #ed8936;
+            color: white;
+        }
+
+        .action-text {
+            flex: 1;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* 战略建议样式 */
+        .strategy-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 15px;
+            background: linear-gradient(135deg, #ebf8ff, #bee3f8);
+            border-radius: 12px;
+        }
+
+        .strategy-number {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #3182ce, #2c5282);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .strategy-text {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #2a4365;
+        }
+
+        /* 关键指标预警样式 */
+        .metric-alert {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            background: #f7fafc;
+            border-radius: 12px;
+            border-left: 4px solid #e2e8f0;
+        }
+
+        .alert-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .alert-indicator.good {
+            background: #38a169;
+        }
+
+        .alert-indicator.warning {
+            background: #ed8936;
+        }
+
+        .alert-indicator.danger {
+            background: #e53e3e;
+        }
+
+        .alert-text {
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .metric-value {
+            font-weight: bold;
+            color: #2d3748;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 报告头部 -->
+        <div class="header">
+            <h1>
+                <i class="fas fa-chart-line"></i>
+                企业营销管理分析报告
+            </h1>
+            <p class="subtitle">基于销帮帮(XBB)系统数据的综合营销分析与决策支持</p>
+            <div class="report-time">
+                <i class="fas fa-calendar-alt"></i>
+                <span>报告周期：2025年1月1日 - 2025年1月31日</span>
+                <span style="margin-left: 20px;">
+                    <i class="fas fa-clock"></i>
+                    生成时间：2025年1月31日 09:30
+                </span>
+            </div>
+        </div>
+
+        <!-- 执行摘要与决策建议 -->
+        <div class="executive-summary">
+            <div class="summary-header">
+                <h2><i class="fas fa-lightbulb"></i> 执行摘要与决策建议</h2>
+                <p>基于数据分析的核心发现与管理建议</p>
+            </div>
+            
+            <div class="summary-grid">
+                <!-- 核心发现 -->
+                <div class="summary-card findings-card">
+                    <div class="summary-card-header">
+                        <div class="summary-icon" style="background: linear-gradient(135deg, #2ecc71, #27ae60);">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h3>核心发现</h3>
+                    </div>
+                    <div class="summary-content">
+                        <div class="finding-item positive">
+                            <i class="fas fa-check-circle"></i>
+                            <span>销售转化率7.1%超行业平均水平42%</span>
+                        </div>
+                        <div class="finding-item positive">
+                            <i class="fas fa-check-circle"></i>
+                            <span>月度目标完成81.9%，预计提前完成</span>
+                        </div>
+                        <div class="finding-item warning">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>3家重点客户存在流失风险</span>
+                        </div>
+                        <div class="finding-item critical">
+                            <i class="fas fa-times-circle"></i>
+                            <span>656万应收账款需重点关注</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 紧急行动项 -->
+                <div class="summary-card action-card">
+                    <div class="summary-card-header">
+                        <div class="summary-icon" style="background: linear-gradient(135deg, #e74c3c, #c0392b);">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <h3>紧急行动项</h3>
+                    </div>
+                    <div class="summary-content">
+                        <div class="action-item high-priority">
+                            <div class="priority-badge high">高</div>
+                            <div class="action-text">
+                                <strong>华润集团</strong> - 30天未跟进，立即安排张经理上门拜访
+                            </div>
+                        </div>
+                        <div class="action-item medium-priority">
+                            <div class="priority-badge medium">中</div>
+                            <div class="action-text">
+                                <strong>万科地产</strong> - 合同即将到期，启动续约谈判
+                            </div>
+                        </div>
+                        <div class="action-item medium-priority">
+                            <div class="priority-badge medium">中</div>
+                            <div class="action-text">
+                                <strong>回款计划</strong> - 制定656万未收款分阶段回收方案
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 战略建议 -->
+                <div class="summary-card strategy-card">
+                    <div class="summary-card-header">
+                        <div class="summary-icon" style="background: linear-gradient(135deg, #3498db, #2980b9);">
+                            <i class="fas fa-chess"></i>
+                        </div>
+                        <h3>战略建议</h3>
+                    </div>
+                    <div class="summary-content">
+                        <div class="strategy-item">
+                            <div class="strategy-number">1</div>
+                            <div class="strategy-text">
+                                <strong>优化销售漏斗</strong><br>
+                                提升线索到机会26%转化率，重点加强需求挖掘
+                            </div>
+                        </div>
+                        <div class="strategy-item">
+                            <div class="strategy-number">2</div>
+                            <div class="strategy-text">
+                                <strong>客户分级管理</strong><br>
+                                建立VIP客户专属服务体系，提升客户价值
+                            </div>
+                        </div>
+                        <div class="strategy-item">
+                            <div class="strategy-number">3</div>
+                            <div class="strategy-text">
+                                <strong>团队能力建设</strong><br>
+                                针对业绩差距大的销售人员进行专项培训
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 关键指标预警 -->
+                <div class="summary-card metrics-card">
+                    <div class="summary-card-header">
+                        <div class="summary-icon" style="background: linear-gradient(135deg, #f39c12, #e67e22);">
+                            <i class="fas fa-tachometer-alt"></i>
+                        </div>
+                        <h3>关键指标预警</h3>
+                    </div>
+                    <div class="summary-content">
+                        <div class="metric-alert warning">
+                            <div class="alert-indicator warning"></div>
+                            <div class="alert-text">
+                                <strong>回款率</strong><br>
+                                <span class="metric-value">65.3%</span> 需要关注
+                            </div>
+                        </div>
+                        <div class="metric-alert danger">
+                            <div class="alert-indicator danger"></div>
+                            <div class="alert-text">
+                                <strong>客户风险</strong><br>
+                                <span class="metric-value">3家</span> 高风险客户
+                            </div>
+                        </div>
+                        <div class="metric-alert warning">
+                            <div class="alert-indicator warning"></div>
+                            <div class="alert-text">
+                                <strong>新客户获取</strong><br>
+                                <span class="metric-value">67/80</span> 低于目标
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 核心KPI仪表板 -->
+        <div class="dashboard">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <div class="card-icon" style="background: linear-gradient(135deg, #3498db, #2980b9);">
+                            <i class="fas fa-bullseye"></i>
+                        </div>
+                        营销核心指标
+                    </div>
+                </div>
+                <div class="kpi-grid">
+                    <div class="kpi-item">
+                        <div class="kpi-value">1,247</div>
+                        <div class="kpi-label">销售线索</div>
+                        <div class="kpi-trend trend-up">
+                            <i class="fas fa-arrow-up"></i> +15.2%
+                        </div>
+                    </div>
+                    <div class="kpi-item">
+                        <div class="kpi-value">324</div>
+                        <div class="kpi-label">销售机会</div>
+                        <div class="kpi-trend trend-up">
+                            <i class="fas fa-arrow-up"></i> +8.7%
+                        </div>
+                    </div>
+                    <div class="kpi-item">
+                        <div class="kpi-value">89</div>
+                        <div class="kpi-label">成交合同</div>
+                        <div class="kpi-trend trend-up">
+                            <i class="fas fa-arrow-up"></i> +12.5%
+                        </div>
+                    </div>
+                    <div class="kpi-item">
+                        <div class="kpi-value" style="font-size: 1.6rem;">2,456万</div>
+                        <div class="kpi-label">合同金额</div>
+                        <div class="kpi-trend trend-up">
+                            <i class="fas fa-arrow-up"></i> +18.3%
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <div class="card-icon" style="background: linear-gradient(135deg, #27ae60, #229954);">
+                            <i class="fas fa-target"></i>
+                        </div>
+                        目标达成情况
+                    </div>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-label">
+                        <span>月度销售目标</span>
+                        <span>2,456万 / 3,000万 (81.9%)</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill progress-success" style="width: 81.9%"></div>
+                    </div>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-label">
+                        <span>新客户获取目标</span>
+                        <span>67 / 80 (83.8%)</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill progress-warning" style="width: 83.8%"></div>
+                    </div>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-label">
+                        <span>客户跟进目标</span>
+                        <span>1,247 / 1,200 (103.9%)</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill progress-info" style="width: 100%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 销售漏斗分析 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">
+                    <div class="card-icon" style="background: linear-gradient(135deg, #9b59b6, #8e44ad);">
+                        <i class="fas fa-filter"></i>
+                    </div>
+                    销售漏斗转化分析
+                </div>
+            </div>
+            <div class="funnel-container">
+                <div class="funnel-stage">
+                    <div class="funnel-value">1,247</div>
+                    <div class="funnel-label">销售线索</div>
+                    <div class="funnel-rate">基数 100%</div>
+                </div>
+                <div class="funnel-stage">
+                    <div class="funnel-value">324</div>
+                    <div class="funnel-label">销售机会</div>
+                    <div class="funnel-rate">转化率 26.0%</div>
+                </div>
+                <div class="funnel-stage">
+                    <div class="funnel-value">156</div>
+                    <div class="funnel-label">报价阶段</div>
+                    <div class="funnel-rate">转化率 48.1%</div>
+                </div>
+                <div class="funnel-stage">
+                    <div class="funnel-value">89</div>
+                    <div class="funnel-label">成交合同</div>
+                    <div class="funnel-rate">转化率 57.1%</div>
+                </div>
+            </div>
+            <div class="insight-section">
+                <div class="insight-title">
+                    <i class="fas fa-lightbulb"></i>
+                    转化分析洞察
+                </div>
+                <div class="insight-content">
+                    • 整体线索到成交转化率为7.1%，高于行业平均水平5.2%<br>
+                    • 机会到报价转化率48.1%需要提升，建议加强客户需求挖掘<br>
+                    • 报价到成交转化率57.1%表现优秀，说明报价策略有效
+                </div>
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- 销售团队与客户分析 -->
+        <div class="section-grid">
+            <!-- 销售团队分析 -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <div class="card-icon" style="background: linear-gradient(135deg, #e67e22, #d35400);">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        销售团队表现分析
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>排名</th>
+                                <th>销售人员</th>
+                                <th>跟进客户</th>
+                                <th>成交合同</th>
+                                <th>合同金额(万)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="rank-badge rank-1">1</span></td>
+                                <td>张经理</td>
+                                <td>89</td>
+                                <td>18</td>
+                                <td>456.8</td>
+                            </tr>
+                            <tr>
+                                <td><span class="rank-badge rank-2">2</span></td>
+                                <td>李主管</td>
+                                <td>76</td>
+                                <td>15</td>
+                                <td>398.2</td>
+                            </tr>
+                            <tr>
+                                <td><span class="rank-badge rank-3">3</span></td>
+                                <td>王总监</td>
+                                <td>68</td>
+                                <td>14</td>
+                                <td>367.5</td>
+                            </tr>
+                            <tr>
+                                <td><span class="rank-badge rank-other">4</span></td>
+                                <td>赵专员</td>
+                                <td>58</td>
+                                <td>12</td>
+                                <td>298.7</td>
+                            </tr>
+                            <tr>
+                                <td><span class="rank-badge rank-other">5</span></td>
+                                <td>陈助理</td>
+                                <td>52</td>
+                                <td>10</td>
+                                <td>245.3</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 客户分析 -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <div class="card-icon" style="background: linear-gradient(135deg, #f39c12, #e67e22);">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        客户结构分析
+                    </div>
+                </div>
+                <div style="margin: 20px 0;">
+                    <div class="customer-level">
+                        <div class="level-indicator level-vip"></div>
+                        <span>VIP客户 (>100万)</span>
+                        <span style="margin-left: auto; font-weight: 600;">45个 (78%贡献)</span>
+                    </div>
+                    <div class="customer-level">
+                        <div class="level-indicator level-important"></div>
+                        <span>重要客户 (50-100万)</span>
+                        <span style="margin-left: auto; font-weight: 600;">89个 (18%贡献)</span>
+                    </div>
+                    <div class="customer-level">
+                        <div class="level-indicator level-normal"></div>
+                        <span>普通客户 (<50万)</span>
+                        <span style="margin-left: auto; font-weight: 600;">234个 (4%贡献)</span>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="customerChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- 重点客户风险预警 -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">
+                    <div class="card-icon" style="background: linear-gradient(135deg, #e74c3c, #c0392b);">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    重点客户风险预警
+                </div>
+            </div>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>客户名称</th>
+                            <th>负责人</th>
+                            <th>最后跟进</th>
+                            <th>合同金额(万)</th>
+                            <th>风险状态</th>
+                            <th>建议措施</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>华润集团</td>
+                            <td>张经理</td>
+                            <td>30天前</td>
+                            <td>280.0</td>
+                            <td><span class="status-badge status-risk">高风险</span></td>
+                            <td>立即上门拜访</td>
+                        </tr>
+                        <tr>
+                            <td>万科地产</td>
+                            <td>李主管</td>
+                            <td>15天前</td>
+                            <td>450.0</td>
+                            <td><span class="status-badge status-pending">需关注</span></td>
+                            <td>合同续约跟进</td>
+                        </tr>
+                        <tr>
+                            <td>中信证券</td>
+                            <td>王总监</td>
+                            <td>3天前</td>
+                            <td>380.0</td>
+                            <td><span class="status-badge status-active">正常</span></td>
+                            <td>保持定期沟通</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- 回款分析 -->
+        <div class="section-grid">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <div class="card-icon" style="background: linear-gradient(135deg, #16a085, #1abc9c);">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                        应收账款分析
+                    </div>
+                </div>
+                <div class="kpi-grid">
+                    <div class="kpi-item">
+                        <div class="kpi-value" style="font-size: 1.6rem;">1,890万</div>
+                        <div class="kpi-label">应收总额</div>
+                    </div>
+                    <div class="kpi-item">
+                        <div class="kpi-value" style="font-size: 1.6rem;">1,234万</div>
+                        <div class="kpi-label">已收金额</div>
+                    </div>
+                    <div class="kpi-item">
+                        <div class="kpi-value">656万</div>
+                        <div class="kpi-label">未收金额</div>
+                    </div>
+                    <div class="kpi-item">
+                        <div class="kpi-value">65.3%</div>
+                        <div class="kpi-label">回款率</div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="paymentChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <div class="card-icon" style="background: linear-gradient(135deg, #34495e, #2c3e50);">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                        产品销售贡献分析
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>产品类别</th>
+                                <th>销售数量</th>
+                                <th>销售金额(万)</th>
+                                <th>贡献占比</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>工业设备</td>
+                                <td>156</td>
+                                <td>1,234.5</td>
+                                <td>50.3%</td>
+                            </tr>
+                            <tr>
+                                <td>技术服务</td>
+                                <td>89</td>
+                                <td>678.9</td>
+                                <td>27.6%</td>
+                            </tr>
+                            <tr>
+                                <td>软件系统</td>
+                                <td>234</td>
+                                <td>345.6</td>
+                                <td>14.1%</td>
+                            </tr>
+                            <tr>
+                                <td>配件耗材</td>
+                                <td>567</td>
+                                <td>197.0</td>
+                                <td>8.0%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 客户结构饼图
+        const customerCtx = document.getElementById('customerChart').getContext('2d');
+        new Chart(customerCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['VIP客户', '重要客户', '普通客户'],
+                datasets: [{
+                    data: [45, 89, 234],
+                    backgroundColor: [
+                        '#e74c3c',
+                        '#f39c12',
+                        '#3498db'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        // 应收账款趋势图
+        const paymentCtx = document.getElementById('paymentChart').getContext('2d');
+        new Chart(paymentCtx, {
+            type: 'line',
+            data: {
+                labels: ['1月', '2月', '3月', '4月', '5月', '6月'],
+                datasets: [{
+                    label: '应收金额',
+                    data: [800, 950, 1100, 1300, 1600, 1890],
+                    borderColor: '#3498db',
+                    backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }, {
+                    label: '已收金额',
+                    data: [600, 720, 850, 980, 1150, 1234],
+                    borderColor: '#27ae60',
+                    backgroundColor: 'rgba(39, 174, 96, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '万';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // 添加交互效果
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
+</html> 

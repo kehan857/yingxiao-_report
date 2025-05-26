@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>企业大脑：数据驱动智能决策的四大核心步骤</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        body, #pdf-container {
+            margin: 0 !important;
+            padding: 0 !important;
+            background: #f0f2f5;
+        }
+        .slide {
+            width: 1280px;
+            height: 720px;
+            margin: 0 auto;
+            position: relative;
+            background: linear-gradient(135deg, #0a2463 0%, #1e3d59 50%, #2a4494 100%);
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            page-break-after: always;
+            break-after: page;
+        }
+        .toolbar {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        .toolbar button {
+            background: #2a4494;
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            margin: 0 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .toolbar button:hover {
+            background: #1e3d59;
+        }
+        .data-particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            animation: float 8s infinite ease-in-out;
+        }
+        .data-line {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 100%);
+            transform-origin: left center;
+            animation: pulse 3s infinite ease-in-out;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; }
+            50% { transform: translateY(-20px) translateX(10px); opacity: 0.8; }
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; width: 50px; }
+            50% { opacity: 0.8; width: 100px; }
+        }
+        .brain-circuit {
+            position: absolute;
+            bottom: 50px;
+            right: 50px;
+            width: 300px;
+            height: 300px;
+            border-radius: 150px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 30px rgba(0, 150, 255, 0.2);
+        }
+        .circuit-node {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #ff7700;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #ff7700;
+        }
+        .app-card {
+            transition: all 0.3s ease;
+        }
+        .app-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+        .dash-item {
+            height: 10px;
+            border-radius: 5px;
+            margin: 6px 0;
+        }
+        .chart-bar {
+            transition: height 0.5s ease;
+        }
+        .chart-bar:hover {
+            filter: brightness(1.2);
+        }
+        .alert-dot {
+            animation: pulse 2s infinite;
+        }
+        .process-arrow {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.8) 100%);
+            width: 50px;
+        }
+        .data-block {
+            transition: all 0.3s ease;
+        }
+        .data-block:hover {
+            transform: translateY(-5px);
+        }
+        .data-component {
+            animation: float 3s infinite ease-in-out;
+        }
+        .animated-gradient {
+            background: linear-gradient(270deg, #4a6fa5, #166088);
+            background-size: 400% 400%;
+            animation: gradient 8s ease infinite;
+        }
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="toolbar">
+        <button onclick="exportToPDF()">导出PDF</button>
+        <button onclick="window.print()">打印</button>
+    </div>
+
+    <div id="pdf-container">
+    <!-- 第一页：概述 -->
+    <div class="slide flex flex-col justify-between p-16 relative overflow-hidden">
+        <!-- 背景装饰元素 -->
+        <div class="data-particle opacity-30" style="top: 15%; left: 20%;"></div>
+        <div class="data-particle opacity-50" style="top: 25%; left: 60%;"></div>
+        <div class="data-particle opacity-40" style="top: 45%; left: 35%;"></div>
+        <div class="data-particle opacity-60" style="top: 65%; left: 75%;"></div>
+        <div class="data-particle opacity-30" style="top: 80%; left: 30%;"></div>
+        <div class="data-line" style="top: 30%; left: 10%; transform: rotate(30deg);"></div>
+        <div class="data-line" style="top: 50%; left: 40%; transform: rotate(-15deg);"></div>
+        <div class="data-line" style="top: 70%; left: 20%; transform: rotate(45deg);"></div>
+
+        <!-- 主要内容 -->
+        <div class="z-10">
+            <h1 class="text-5xl font-bold mb-4 text-white tracking-wide">企业大脑</h1>
+            <h2 class="text-3xl font-semibold mb-6 text-blue-200">数据驱动智能决策的四大核心步骤</h2>
+        </div>
+
+        <div class="z-10 grid grid-cols-4 gap-8 my-12">
+            <div class="bg-white bg-opacity-10 p-6 rounded-lg backdrop-filter backdrop-blur-sm border border-white border-opacity-20 transform hover:scale-105 transition-transform duration-300">
+                <i class="fas fa-database text-4xl text-blue-300 mb-4"></i>
+                <h3 class="text-xl font-semibold mb-2">数据采集</h3>
+                <p class="text-sm text-blue-100">汇聚企业全景数据</p>
+            </div>
+            <div class="bg-white bg-opacity-10 p-6 rounded-lg backdrop-filter backdrop-blur-sm border border-white border-opacity-20 transform hover:scale-105 transition-transform duration-300">
+                <i class="fas fa-cogs text-4xl text-blue-300 mb-4"></i>
+                <h3 class="text-xl font-semibold mb-2">数据管理</h3>
+                <p class="text-sm text-blue-100">构建可信数字资产</p>
+            </div>
+            <div class="bg-white bg-opacity-10 p-6 rounded-lg backdrop-filter backdrop-blur-sm border border-white border-opacity-20 transform hover:scale-105 transition-transform duration-300">
+                <i class="fas fa-chart-line text-4xl text-blue-300 mb-4"></i>
+                <h3 class="text-xl font-semibold mb-2">数据应用</h3>
+                <p class="text-sm text-blue-100">驱动业务优化与增长</p>
+            </div>
+            <div class="bg-white bg-opacity-10 p-6 rounded-lg backdrop-filter backdrop-blur-sm border border-white border-opacity-20 transform hover:scale-105 transition-transform duration-300">
+                <i class="fas fa-brain text-4xl text-orange-400 mb-4"></i>
+                <h3 class="text-xl font-semibold mb-2">智能化决策</h3>
+                <p class="text-sm text-blue-100">构建智慧运营闭环</p>
+            </div>
+        </div>
+
+        <div class="z-10 flex items-center">
+            <div class="h-1 w-16 bg-orange-400 mr-4"></div>
+            <p class="text-lg font-light">从数据到智慧，赋能企业数字化转型</p>
+        </div>
+    </div>
+
+    <!-- 第二页：数据采集 -->
+    <div class="slide flex flex-col p-10 relative overflow-hidden">
+        <!-- Header -->
+        <div class="z-10 mb-8">
+            <div class="flex items-center">
+                <div class="h-1 w-12 bg-orange-400 mr-4"></div>
+                <h2 class="text-3xl font-semibold text-white">第一步：数据采集</h2>
+            </div>
+            <h3 class="text-2xl ml-16 text-blue-200 font-light mt-2">汇聚企业全景数据</h3>
+        </div>
+        <!-- Main Content -->
+        <div class="flex flex-row h-full">
+            <!-- Left Side - Key Points -->
+            <div class="w-1/3 pr-8 flex flex-col justify-center">
+                <h4 class="text-xl font-semibold mb-6 text-blue-100">企业大脑数据采集能力</h4>
+                <ul class="space-y-5">
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle text-orange-400 mt-1 mr-3"></i>
+                        <span>强大的数据接入能力，打破数据孤岛局面</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle text-orange-400 mt-1 mr-3"></i>
+                        <span>整合企业内外部、线上线下分散数据</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle text-orange-400 mt-1 mr-3"></i>
+                        <span>支持接入现有业务系统与实时数据</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle text-orange-400 mt-1 mr-3"></i>
+                        <span>收集生产线传感器设备实时数据</span>
+                    </li>
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle text-orange-400 mt-1 mr-3"></i>
+                        <span>整合人工填报的Excel表格数据</span>
+                    </li>
+                </ul>
+            </div>
+            <!-- Right Side - Visualization -->
+            <div class="w-2/3 relative flex items-center justify-center">
+                <!-- Central Brain Hub -->
+                <div class="brain-hub absolute bg-blue-900 bg-opacity-80 rounded-full w-52 h-52 flex items-center justify-center border-4 border-blue-300 border-opacity-30 z-20 shadow-lg">
+                    <div class="text-center">
+                        <i class="fas fa-brain text-5xl text-orange-400 mb-3"></i>
+                        <h4 class="text-xl font-bold">企业大脑</h4>
+                        <p class="text-sm text-blue-200 mt-2">统一数据平台</p>
+                    </div>
+                </div>
+                <!-- Data Sources -->
+                <div class="absolute top-0 left-0 data-source bg-white bg-opacity-10 p-4 rounded-lg backdrop-filter backdrop-blur-sm border border-white border-opacity-20 w-44">
+                    <i class="fas fa-shopping-cart text-3xl text-blue-300 mb-3"></i>
+                    <h5 class="font-semibold">ERP系统</h5>
+                    <p class="text-xs text-blue-100 mt-1">订单、财务、库存数据</p>
+                </div>
+                <div class="absolute top-0 right-0 data-source bg-white bg-opacity-10 p-4 rounded-lg backdrop-filter backdrop-blur-sm border border-white border-opacity-20 w-44">
+                    <i class="fas fa-industry text-3xl text-blue-300 mb-3"></i>
+                    <h5 class="font-semibold">MES系统</h5>
+                    <p class="text-xs text-blue-100 mt-1">生产过程数据</p>
+                </div>
+                <div class="absolute bottom-0 left-0 data-source bg-white bg-opacity-10 p-4 rounded-lg backdrop-filter backdrop-blur-sm border border-white border-opacity-20 w-44">
+                    <i class="fas fa-users text-3xl text-blue-300 mb-3"></i>
+                    <h5 class="font-semibold">CRM系统</h5>
+                    <p class="text-xs text-blue-100 mt-1">客户关系数据</p>
+                </div>
+                <div class="absolute bottom-0 right-0 data-source bg-white bg-opacity-10 p-4 rounded-lg backdrop-filter backdrop-blur-sm border border-white border-opacity-20 w-44">
+                    <i class="fas fa-file-excel text-3xl text-blue-300 mb-3"></i>
+                    <h5 class="font-semibold">人工数据</h5>
+                    <p class="text-xs text-blue-100 mt-1">Excel表格数据</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 第三页：数据管理 -->
+    <div class="slide flex flex-col p-10 relative overflow-hidden">
+        <!-- Header -->
+        <div class="z-10 mb-8">
+            <div class="flex items-center">
+                <div class="h-1 w-12 bg-orange-400 mr-4"></div>
+                <h2 class="text-3xl font-semibold text-white">第二步：数据管理</h2>
+            </div>
+            <h3 class="text-2xl ml-16 text-blue-200 font-light mt-2">构建可信数字资产</h3>
+        </div>
+        <!-- Main Content -->
+        <div class="flex flex-col h-full">
+            <!-- Data Middle Platform Section -->
+            <div class="flex items-center justify-center mb-10">
+                <div class="animated-gradient p-6 rounded-lg w-2/3 text-center">
+                    <i class="fas fa-database text-4xl text-blue-300 mb-3"></i>
+                    <h4 class="text-2xl font-bold">数据中台</h4>
+                    <p class="text-lg text-blue-100 mt-2">集中化的数据处理平台，将原始数据转化为企业可信数字资产</p>
+                </div>
+            </div>
+            <!-- Data Process Flow -->
+            <div class="flex justify-between items-center mb-12">
+                <!-- Raw Data -->
+                <div class="data-block bg-white bg-opacity-10 p-5 rounded-lg backdrop-filter backdrop-blur-sm border border-white border-opacity-20 w-64">
+                    <div class="flex justify-between items-center mb-3">
+                        <i class="fas fa-file-alt text-3xl text-blue-300"></i>
+                        <span class="bg-red-500 bg-opacity-30 text-xs px-2 py-1 rounded">未处理</span>
+                    </div>
+                    <h5 class="font-semibold text-lg mb-2">原始数据</h5>
+                    <ul class="text-sm text-blue-100 space-y-1">
+                        <li class="flex items-center">
+                            <i class="fas fa-times-circle text-red-400 mr-2"></i>
+                            <span>格式不统一</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-times-circle text-red-400 mr-2"></i>
+                            <span>可能存在错误</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-times-circle text-red-400 mr-2"></i>
+                            <span>信息不完整</span>
+                        </li>
+                    </ul>
+                </div>
+                <!-- Process Arrow -->
+                <div class="relative w-24 flex justify-center items-center">
+                    <div class="h-0.5 w-full bg-gradient-to-r from-blue-300 to-blue-500"></div>
+                    <div class="absolute right-0 w-0 h-0 border-t-8 border-t-transparent border-b-8 border-b-transparent border-l-8 border-l-blue-500"></div>
+                </div>
+                <!-- Data Processing -->
+                <div class="data-block bg-white bg-opacity-10 p-5 rounded-lg backdrop-filter backdrop-blur-sm border border-white border-opacity-20 w-64">
+                    <div class="flex justify-between items-center mb-3">
+                        <i class="fas fa-cogs text-3xl text-blue-300"></i>
+                        <span class="bg-yellow-500 bg-opacity-30 text-xs px-2 py-1 rounded">处理中</span>
+                    </div>
+                    <h5 class="font-semibold text-lg mb-2">数据处理</h5>
+                    <ul class="text-sm text-blue-100 space-y-1">
+                        <li class="flex items-center">
+                            <i class="fas fa-broom text-yellow-400 mr-2"></i>
+                            <span>数据清洗</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-exchange-alt text-yellow-400 mr-2"></i>
+                            <span>数据转换</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-clipboard-check text-yellow-400 mr-2"></i>
+                            <span>数据校验</span>
+                        </li>
+                    </ul>
+                </div>
+                <!-- Process Arrow -->
+                <div class="relative w-24 flex justify-center items-center">
+                    <div class="h-0.5 w-full bg-gradient-to-r from-blue-300 to-blue-500"></div>
+                    <div class="absolute right-0 w-0 h-0 border-t-8 border-t-transparent border-b-8 border-b-transparent border-l-8 border-l-blue-500"></div>
+                </div>
+                <!-- Standardized Data -->
+                <div class="data-block bg-white bg-opacity-10 p-5 rounded-lg backdrop-filter backdrop-blur-sm border border-white border-opacity-20 w-64">
+                    <div class="flex justify-between items-center mb-3">
+                        <i class="fas fa-cubes text-3xl text-blue-300"></i>
+                        <span class="bg-green-500 bg-opacity-30 text-xs px-2 py-1 rounded">已标准化</span>
+                    </div>
+                    <h5 class="font-semibold text-lg mb-2">标准化数据组件</h5>
+                    <ul class="text-sm text-blue-100 space-y-1">
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-400 mr-2"></i>
+                            <span>统一格式标准</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-400 mr-2"></i>
+                            <span>数据质量可靠</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-check-circle text-green-400 mr-2"></i>
+                            <span>易于复用与整合</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 第四页：数据应用 -->
+    <div class="slide flex flex-col p-10 relative overflow-hidden">
+        <!-- Header -->
+        <div class="z-10 mb-6">
+            <div class="flex items-center">
+                <div class="h-1 w-12 bg-orange-400 mr-4"></div>
+                <h2 class="text-3xl font-semibold text-white">第三步：数据应用</h2>
+            </div>
+            <h3 class="text-2xl ml-16 text-blue-200 font-light mt-2">驱动业务优化与增长</h3>
+        </div>
+        <!-- Main Content -->
+        <div class="flex flex-col h-full">
+            <!-- Top section - Introduction -->
+            <div class="mb-6">
+                <p class="text-lg text-blue-100">让数据真正"活"起来，产生实实在在的业务价值，帮助企业看清经营中的问题，优化业务流程。</p>
+            </div>
+            <!-- Applications Grid -->
+            <div class="grid grid-cols-3 gap-6 flex-grow">
+                <!-- Standardized Reports -->
+                <div class="app-card bg-white bg-opacity-10 p-6 rounded-xl backdrop-filter backdrop-blur-sm border border-white border-opacity-20">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-file-alt text-3xl text-blue-300 mr-4"></i>
+                        <h4 class="text-xl font-semibold">标准化经营分析报表</h4>
+                    </div>
+                    <p class="text-sm text-blue-100 mb-4">将行业成熟的管理经验和分析维度固化到报表模板中，快速了解各环节经营状况。</p>
+                    <!-- Report visualization -->
+                    <div class="bg-blue-900 bg-opacity-40 p-4 rounded-lg mt-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs">销售分析</span>
+                            <i class="fas fa-expand-arrows-alt text-xs text-blue-300"></i>
+                        </div>
+                        <div class="dash-item bg-blue-400 w-full"></div>
+                        <div class="dash-item bg-blue-500 w-3/4"></div>
+                        <div class="dash-item bg-orange-400 w-1/2"></div>
+                        <div class="dash-item bg-blue-600 w-4/5"></div>
+                    </div>
+                </div>
+                <!-- Multi-dimensional Analysis -->
+                <div class="app-card bg-white bg-opacity-10 p-6 rounded-xl backdrop-filter backdrop-blur-sm border border-white border-opacity-20">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-cube text-3xl text-blue-300 mr-4"></i>
+                        <h4 class="text-xl font-semibold">多维度分析与数据挖掘</h4>
+                    </div>
+                    <p class="text-sm text-blue-100 mb-4">支持灵活的多维度分析和数据挖掘，发现数据背后的潜在规律和商机。</p>
+                    <!-- Multi-dimensional analysis visualization -->
+                    <div class="bg-blue-900 bg-opacity-40 p-4 rounded-lg mt-4">
+                        <div class="flex justify-between mb-3">
+                            <div class="text-xs">
+                                <i class="fas fa-filter mr-1"></i> 按产品
+                            </div>
+                            <div class="text-xs">
+                                <i class="fas fa-filter mr-1"></i> 按客户
+                            </div>
+                            <div class="text-xs">
+                                <i class="fas fa-filter mr-1"></i> 按区域
+                            </div>
+                        </div>
+                        <div class="flex justify-between h-20 items-end">
+                            <div class="chart-bar bg-blue-400 w-8 h-1/4"></div>
+                            <div class="chart-bar bg-blue-500 w-8 h-3/4"></div>
+                            <div class="chart-bar bg-orange-400 w-8 h-2/4"></div>
+                            <div class="chart-bar bg-blue-600 w-8 h-full"></div>
+                            <div class="chart-bar bg-blue-300 w-8 h-1/3"></div>
+                            <div class="chart-bar bg-blue-700 w-8 h-3/5"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Real-time Monitoring -->
+                <div class="app-card bg-white bg-opacity-10 p-6 rounded-xl backdrop-filter backdrop-blur-sm border border-white border-opacity-20">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-tachometer-alt text-3xl text-blue-300 mr-4"></i>
+                        <h4 class="text-xl font-semibold">实时监控与预警</h4>
+                    </div>
+                    <p class="text-sm text-blue-100 mb-4">对成本、生产进度、设备状态等进行实时监控，及时发现问题并预警。</p>
+                    <!-- Monitoring visualization -->
+                    <div class="bg-blue-900 bg-opacity-40 p-4 rounded-lg mt-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs">成本控制预警</span>
+                            <div class="alert-dot h-2 w-2 rounded-full bg-red-500"></div>
+                        </div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs">生产线A</span>
+                            <div class="w-2/3 bg-gray-700 rounded-full h-2">
+                                <div class="bg-green-500 h-2 rounded-full" style="width: 85%"></div>
+                            </div>
+                            <span class="text-xs">85%</span>
+                        </div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs">生产线B</span>
+                            <div class="w-2/3 bg-gray-700 rounded-full h-2">
+                                <div class="bg-orange-400 h-2 rounded-full" style="width: 68%"></div>
+                            </div>
+                            <span class="text-xs">68%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 第五页：智能化决策 -->
+    <div class="slide flex flex-col p-10 relative overflow-hidden">
+        <!-- Header -->
+        <div class="z-10 mb-6">
+            <div class="flex items-center">
+                <div class="h-1 w-12 bg-orange-400 mr-4"></div>
+                <h2 class="text-3xl font-semibold text-white">第四步：智能化决策</h2>
+            </div>
+            <h3 class="text-2xl ml-16 text-blue-200 font-light mt-2">构建智慧运营闭环</h3>
+        </div>
+        <!-- Main Content -->
+        <div class="flex flex-col h-full">
+            <!-- Top section - Introduction -->
+            <div class="mb-6">
+                <p class="text-lg text-blue-100">通过AI技术赋能，实现数据驱动的智能决策，构建企业智慧运营闭环。</p>
+            </div>
+            <!-- Decision Making Process -->
+            <div class="grid grid-cols-2 gap-8 flex-grow">
+                <!-- Left Side - AI Decision Making -->
+                <div class="bg-white bg-opacity-10 p-6 rounded-xl backdrop-filter backdrop-blur-sm border border-white border-opacity-20">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-robot text-3xl text-orange-400 mr-4"></i>
+                        <h4 class="text-xl font-semibold">AI智能决策</h4>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <i class="fas fa-brain text-blue-300 mt-1 mr-3"></i>
+                            <div>
+                                <h5 class="font-semibold mb-1">智能分析</h5>
+                                <p class="text-sm text-blue-100">利用机器学习算法，自动分析数据趋势和规律</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-lightbulb text-yellow-400 mt-1 mr-3"></i>
+                            <div>
+                                <h5 class="font-semibold mb-1">智能预测</h5>
+                                <p class="text-sm text-blue-100">基于历史数据，预测未来业务发展趋势</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-cogs text-green-400 mt-1 mr-3"></i>
+                            <div>
+                                <h5 class="font-semibold mb-1">智能推荐</h5>
+                                <p class="text-sm text-blue-100">提供最优决策建议，辅助管理者决策</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Right Side - Business Impact -->
+                <div class="bg-white bg-opacity-10 p-6 rounded-xl backdrop-filter backdrop-blur-sm border border-white border-opacity-20">
+                    <div class="flex items-center mb-4">
+                        <i class="fas fa-chart-pie text-3xl text-orange-400 mr-4"></i>
+                        <h4 class="text-xl font-semibold">业务价值</h4>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-3 bg-blue-900 bg-opacity-40 rounded-lg">
+                            <div class="flex items-center">
+                                <i class="fas fa-arrow-up text-green-400 mr-3"></i>
+                                <span>决策效率提升</span>
+                            </div>
+                            <span class="text-xl font-bold text-green-400">85%</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-blue-900 bg-opacity-40 rounded-lg">
+                            <div class="flex items-center">
+                                <i class="fas fa-chart-line text-blue-400 mr-3"></i>
+                                <span>业务增长</span>
+                            </div>
+                            <span class="text-xl font-bold text-blue-400">32%</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-blue-900 bg-opacity-40 rounded-lg">
+                            <div class="flex items-center">
+                                <i class="fas fa-coins text-yellow-400 mr-3"></i>
+                                <span>成本降低</span>
+                            </div>
+                            <span class="text-xl font-bold text-yellow-400">28%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Bottom Section - Implementation Steps -->
+            <div class="mt-8">
+                <h4 class="text-xl font-semibold mb-4">实施路径</h4>
+                <div class="flex justify-between">
+                    <div class="data-block bg-white bg-opacity-10 p-4 rounded-lg backdrop-filter backdrop-blur-sm border border-white border-opacity-20 w-1/4">
+                        <div class="text-center">
+                            <div class="w-12 h-12 bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <span class="text-xl font-bold">1</span>
+                            </div>
+                            <h5 class="font-semibold mb-2">数据准备</h5>
+                            <p class="text-sm text-blue-100">确保数据质量和完整性</p>
+                        </div>
+                    </div>
+                    <div class="data-block bg-white bg-opacity-10 p-4 rounded-lg backdrop-filter backdrop-blur-sm border border-white border-opacity-20 w-1/4">
+                        <div class="text-center">
+                            <div class="w-12 h-12 bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <span class="text-xl font-bold">2</span>
+                            </div>
+                            <h5 class="font-semibold mb-2">模型训练</h5>
+                            <p class="text-sm text-blue-100">构建和优化AI模型</p>
+                        </div>
+                    </div>
+                    <div class="data-block bg-white bg-opacity-10 p-4 rounded-lg backdrop-filter backdrop-blur-sm border border-white border-opacity-20 w-1/4">
+                        <div class="text-center">
+                            <div class="w-12 h-12 bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <span class="text-xl font-bold">3</span>
+                            </div>
+                            <h5 class="font-semibold mb-2">系统集成</h5>
+                            <p class="text-sm text-blue-100">与现有系统无缝对接</p>
+                        </div>
+                    </div>
+                    <div class="data-block bg-white bg-opacity-10 p-4 rounded-lg backdrop-filter backdrop-blur-sm border border-white border-opacity-20 w-1/4">
+                        <div class="text-center">
+                            <div class="w-12 h-12 bg-blue-900 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <span class="text-xl font-bold">4</span>
+                            </div>
+                            <h5 class="font-semibold mb-2">持续优化</h5>
+                            <p class="text-sm text-blue-100">根据反馈不断改进</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <script>
+        function exportToPDF() {
+            const element = document.getElementById('pdf-container');
+            const opt = {
+                margin: 0,
+                filename: '企业大脑-数据驱动智能决策的四大核心步骤.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 1, useCORS: true, backgroundColor: null },
+                jsPDF: { unit: 'px', format: [1280, 720], orientation: 'landscape' },
+                pagebreak: { mode: ['css', 'legacy'] }
+            };
+            html2pdf().set(opt).from(element).save();
+        }
+    </script>
+</body>
+</html> 

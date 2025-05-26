@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>企业大脑AI助手 - 业务管理分析</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: #f7f7f7;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .phone-frame {
+            width: 375px;
+            height: 812px;
+            background: #000;
+            border-radius: 40px;
+            padding: 8px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        .screen {
+            width: 100%;
+            height: 100%;
+            background: #f7f7f7;
+            border-radius: 32px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .status-bar {
+            height: 44px;
+            background: #f7f7f7;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .header {
+            background: #fff;
+            padding: 12px 16px;
+            border-bottom: 1px solid #e7e7e7;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+        
+        .back-btn {
+            font-size: 18px;
+            color: #576b95;
+            margin-right: 12px;
+        }
+        
+        .header-title {
+            display: flex;
+            align-items: center;
+        }
+        
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            margin-right: 8px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .contact-info h3 {
+            font-size: 16px;
+            color: #191919;
+            margin-bottom: 2px;
+        }
+        
+        .contact-info p {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .header-right {
+            font-size: 20px;
+            color: #191919;
+        }
+        
+        .chat-area {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            background: #f7f7f7;
+        }
+        
+        .message {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .message.ai {
+            flex-direction: row;
+        }
+        
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            margin-right: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        
+        .message-content {
+            width: 460px;
+            background: #fff;
+            border-radius: 12px;
+            padding: 12px 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            position: relative;
+        }
+        
+        .message-content::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 16px;
+            width: 0;
+            height: 0;
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+            border-right: 8px solid #fff;
+        }
+        
+        .message-time {
+            font-size: 11px;
+            color: #999;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+        
+        .message-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .ai-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 8px;
+            font-weight: 500;
+        }
+        
+        .message-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #191919;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .title-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 6px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        
+        .summary-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 8px 0;
+        }
+        
+        .summary-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .summary-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .stat-value {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+        
+        .stat-label {
+            font-size: 11px;
+            opacity: 0.9;
+        }
+        
+        .summary-highlight {
+            background: rgba(255,255,255,0.15);
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+        
+        .detail-section {
+            margin: 12px 0;
+        }
+        
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #191919;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 6px;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+        
+        .metric-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .metric-item:last-child {
+            border-bottom: none;
+        }
+        
+        .metric-label {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .metric-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #191919;
+        }
+        
+        .trend-up {
+            color: #52c41a;
+        }
+        
+        .trend-down {
+            color: #ff4d4f;
+        }
+        
+        .chart-preview {
+            background: #f8f9fa;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 8px 0;
+            text-align: center;
+            color: #666;
+            font-size: 12px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        
+        .action-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: #576b95;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #666;
+        }
+        
+        .input-bar {
+            background: #fff;
+            padding: 8px 16px;
+            border-top: 1px solid #e7e7e7;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .input-field {
+            flex: 1;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 14px;
+            outline: none;
+        }
+        
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            color: #999;
+            font-size: 12px;
+            margin-left: 52px;
+            margin-bottom: 12px;
+        }
+        
+        .typing-dots {
+            display: flex;
+            margin-left: 8px;
+        }
+        
+        .dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: #999;
+            margin: 0 1px;
+            animation: typing 1.4s infinite;
+        }
+        
+        .dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+                opacity: 0.4;
+            }
+            30% {
+                transform: translateY(-10px);
+                opacity: 1;
+            }
+        }
+
+        .ranking-item {
+            display: flex;
+            align-items: center;
+            padding: 6px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .ranking-item:last-child {
+            border-bottom: none;
+        }
+        
+        .rank-number {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        
+        .rank-1 { background: #ff4d4f; color: white; }
+        .rank-2 { background: #fa8c16; color: white; }
+        .rank-3 { background: #52c41a; color: white; }
+        .rank-other { background: #f0f0f0; color: #666; }
+        
+        .ranking-info {
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .ranking-name {
+            font-size: 13px;
+            color: #191919;
+            font-weight: 500;
+        }
+        
+        .ranking-value {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .alert-card {
+            background: #fff2e8;
+            border: 1px solid #ffd591;
+            border-radius: 6px;
+            padding: 10px;
+            margin: 8px 0;
+        }
+        
+        .alert-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        
+        .alert-icon {
+            color: #fa8c16;
+            margin-right: 6px;
+        }
+        
+        .alert-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #d46b08;
+        }
+        
+        .alert-content {
+            font-size: 11px;
+            color: #ad6800;
+            line-height: 1.4;
+        }
+
+        .customer-tag {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 500;
+            margin-right: 4px;
+            margin-bottom: 2px;
+        }
+        
+        .tag-vip { background: #ff4d4f; color: white; }
+        .tag-active { background: #52c41a; color: white; }
+        .tag-risk { background: #fa8c16; color: white; }
+        .tag-potential { background: #1890ff; color: white; }
+
+        .report-tabs {
+            display: flex;
+            background: rgba(255,255,255,0.15);
+            border-radius: 6px;
+            margin: 8px 0;
+        }
+        
+        .tab-item {
+            flex: 1;
+            padding: 6px 8px;
+            text-align: center;
+            font-size: 11px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .tab-item.active {
+            background: rgba(255,255,255,0.3);
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            height: 6px;
+            margin: 4px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+        
+        .progress-success { background: #52c41a; }
+        .progress-warning { background: #fa8c16; }
+        .progress-danger { background: #ff4d4f; }
+
+        .target-card {
+            background: linear-gradient(135deg, #52c41a 0%, #389e0d 100%);
+            color: white;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 8px 0;
+        }
+
+        .salesperson-item {
+            background: #f8f9fa;
+            border-radius: 6px;
+            padding: 8px;
+            margin: 6px 0;
+            border-left: 3px solid #1890ff;
+        }
+        
+        .salesperson-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        
+        .salesperson-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #191919;
+        }
+        
+        .salesperson-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+            font-size: 11px;
+            color: #666;
+        }
+
+        .client-item {
+            background: #f0f8ff;
+            border: 1px solid #bae7ff;
+            border-radius: 6px;
+            padding: 8px;
+            margin: 6px 0;
+        }
+        
+        .client-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        
+        .client-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1890ff;
+        }
+        
+        .client-status {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 8px;
+        }
+        
+        .status-high { background: #ff4d4f; color: white; }
+        .status-medium { background: #fa8c16; color: white; }
+        .status-normal { background: #52c41a; color: white; }
+        
+        .client-info {
+            font-size: 11px;
+            color: #666;
+            line-height: 1.3;
+        }
+    </style>
+</head>
+<body>
+    <div class="phone-frame">
+        <div class="screen">
+            <!-- 状态栏 -->
+            <div class="status-bar">
+                <span>9:41</span>
+                <span>🔋 85%</span>
+            </div>
+            
+            <!-- 聊天头部 -->
+            <div class="header">
+                <div class="header-left">
+                    <div class="back-btn">‹</div>
+                    <div class="header-title">
+                        <div class="avatar">🧠</div>
+                        <div class="contact-info">
+                            <h3>企业大脑AI助手</h3>
+                            <p>智能业务管理分析</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-right">⋯</div>
+            </div>
+            
+            <!-- 聊天区域 -->
+            <div class="chat-area">
+                <!-- 时间分隔 -->
+                <div class="message-time">今天 09:30</div>
+                
+                <!-- 第一条消息：核心业务指标报告 -->
+                <div class="message ai">
+                    <div class="message-avatar">🧠</div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span style="font-size: 14px; font-weight: 600;">📊 核心业务指标报告</span>
+                        </div>
+                        
+                        <!-- 报告周期选择 -->
+                        <div class="report-tabs">
+                            <div class="tab-item">日报</div>
+                            <div class="tab-item active">周报</div>
+                            <div class="tab-item">月报</div>
+                        </div>
+                        
+                        <div class="summary-card">
+                            <div class="summary-title">本周核心指标 | 1月8日-1月14日</div>
+                            <div class="summary-stats">
+                                <div class="stat-item">
+                                    <div class="stat-value">142</div>
+                                    <div class="stat-label">新增线索</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">28</div>
+                                    <div class="stat-label">签约合同</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value">586万</div>
+                                    <div class="stat-label">合同金额</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 目标达成情况 -->
+                        <div class="target-card">
+                            <div style="font-size: 13px; font-weight: 600; margin-bottom: 6px;">🎯 目标达成情况</div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                                <span style="font-size: 11px;">月度目标：2000万</span>
+                                <span style="font-size: 11px;">已完成：1568万 (78.4%)</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill progress-success" style="width: 78.4%"></div>
+                            </div>
+                            <div style="font-size: 10px; margin-top: 4px; opacity: 0.9;">
+                                📈 同比增长 +15.2% | 预计提前3天完成月度目标
+                            </div>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <div class="action-btn btn-primary">详细报告</div>
+                            <div class="action-btn btn-secondary">导出数据</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 第二条消息：销售人员分析 -->
+                <div class="message ai" style="margin-top: 24px;">
+                    <div class="message-avatar">🧠</div>
+                    <div class="message-content">
+                        <div class="message-title">
+                            <span class="title-icon" style="background: #1890ff; color: white;">👥</span>
+                            销售人员分析
+                        </div>
+                        
+                        <!-- 业务员详细分析 -->
+                        <div class="detail-section">
+                            <div class="section-title">
+                                <span class="section-icon" style="background: #722ed1; color: white;">📈</span>
+                                本周销售人员表现
+                            </div>
+                            
+                            <div class="salesperson-item">
+                                <div class="salesperson-header">
+                                    <span class="salesperson-name">张经理 (第1名)</span>
+                                    <span style="font-size: 12px; color: #52c41a; font-weight: 600;">125.8万</span>
+                                </div>
+                                <div class="salesperson-stats">
+                                    <span>沟通次数: 68次</span>
+                                    <span>沟通客户: 32个</span>
+                                    <span>签约合同: 8个</span>
+                                    <span>转化率: 25%</span>
+                                </div>
+                            </div>
+                            
+                            <div class="salesperson-item">
+                                <div class="salesperson-header">
+                                    <span class="salesperson-name">李主管 (第2名)</span>
+                                    <span style="font-size: 12px; color: #fa8c16; font-weight: 600;">98.6万</span>
+                                </div>
+                                <div class="salesperson-stats">
+                                    <span>沟通次数: 52次</span>
+                                    <span>沟通客户: 28个</span>
+                                    <span>签约合同: 6个</span>
+                                    <span>转化率: 21.4%</span>
+                                </div>
+                            </div>
+                            
+                            <div class="salesperson-item">
+                                <div class="salesperson-header">
+                                    <span class="salesperson-name">王总监 (第3名)</span>
+                                    <span style="font-size: 12px; color: #1890ff; font-weight: 600;">86.4万</span>
+                                </div>
+                                <div class="salesperson-stats">
+                                    <span>沟通次数: 45次</span>
+                                    <span>沟通客户: 25个</span>
+                                    <span>签约合同: 5个</span>
+                                    <span>转化率: 20%</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 团队整体数据 -->
+                        <div class="detail-section">
+                            <div class="section-title">
+                                <span class="section-icon" style="background: #13c2c2; color: white;">📊</span>
+                                团队整体数据
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">总沟通次数</span>
+                                <span class="metric-value">468次</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">总沟通客户数</span>
+                                <span class="metric-value">186个</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">平均转化率</span>
+                                <span class="metric-value trend-up">22.1% (+2.3%)</span>
+                            </div>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <div class="action-btn btn-primary">业务员管理</div>
+                            <div class="action-btn btn-secondary">绩效分析</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 第三条消息：重点客户分析 -->
+                <div class="message ai" style="margin-top: 24px;">
+                    <div class="message-avatar">🧠</div>
+                    <div class="message-content">
+                        <div class="message-title">
+                            <span class="title-icon" style="background: #ff4d4f; color: white;">🎯</span>
+                            重点客户分析
+                        </div>
+                        
+                        <!-- 重点关注客户 -->
+                        <div class="detail-section">
+                            <div class="section-title">
+                                <span class="section-icon" style="background: #fa8c16; color: white;">⭐</span>
+                                重点关注客户
+                            </div>
+                            
+                            <div class="client-item">
+                                <div class="client-header">
+                                    <span class="client-name">华润集团</span>
+                                    <span class="client-status status-high">高风险</span>
+                                </div>
+                                <div class="client-info">
+                                    负责人: 张经理 | 上次沟通: 30天前<br>
+                                    合同金额: 280万 | 状态: 存在流失风险
+                                </div>
+                            </div>
+                            
+                            <div class="client-item">
+                                <div class="client-header">
+                                    <span class="client-name">万科地产</span>
+                                    <span class="client-status status-medium">待续约</span>
+                                </div>
+                                <div class="client-info">
+                                    负责人: 李主管 | 上次沟通: 3天前<br>
+                                    合同金额: 450万 | 状态: 合同2月底到期
+                                </div>
+                            </div>
+                            
+                            <div class="client-item">
+                                <div class="client-header">
+                                    <span class="client-name">中信证券</span>
+                                    <span class="client-status status-normal">热度高</span>
+                                </div>
+                                <div class="client-info">
+                                    负责人: 王总监 | 上次沟通: 1天前<br>
+                                    合同金额: 预计380万 | 状态: 近期询价频繁
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 客户价值分析 -->
+                        <div class="detail-section">
+                            <div class="section-title">
+                                <span class="section-icon" style="background: #52c41a; color: white;">💎</span>
+                                客户价值分析
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">超级VIP客户 (>500万)</span>
+                                <span class="metric-value">12个</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">VIP客户 (100-500万)</span>
+                                <span class="metric-value">28个</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">重要客户 (50-100万)</span>
+                                <span class="metric-value">85个</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">普通客户 (<50万)</span>
+                                <span class="metric-value">173个</span>
+                            </div>
+                        </div>
+                        
+                        <!-- AI智能建议 -->
+                        <div style="background: #fff7e6; border: 1px solid #ffd591; border-radius: 6px; padding: 10px; font-size: 12px; color: #d46b08; margin: 8px 0;">
+                            <div style="font-weight: 600; margin-bottom: 4px;">🤖 AI智能建议:</div>
+                            • 华润集团需立即安排张经理上门拜访<br>
+                            • 万科地产续约谈判建议提前至本周启动<br>
+                            • 中信证券可升级为VIP客户，建议增加服务
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <div class="action-btn btn-primary">客户跟进</div>
+                            <div class="action-btn btn-secondary">设置提醒</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 输入提示 -->
+                <div class="typing-indicator" style="margin-top: 16px;">
+                    企业大脑正在分析更多业务数据...
+                    <div class="typing-dots">
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                        <div class="dot"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 输入栏 -->
+            <div class="input-bar">
+                <input type="text" class="input-field" placeholder="询问企业大脑关于团队和客户的问题...">
+                <div style="color: #576b95; font-size: 18px;">📎</div>
+                <div style="color: #576b95; font-size: 18px;">😊</div>
+                <div style="color: #576b95; font-size: 18px;">🎤</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
